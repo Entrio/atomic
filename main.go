@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bitbucket.resmi.kz/dc/atomic/Game"
+	"github.com/Entrio/atomic/Game"
 	"github.com/gen2brain/raylib-go/raylib"
 	"os"
 )

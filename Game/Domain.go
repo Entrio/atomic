@@ -1,8 +1,8 @@
 package Game
 
 import (
-	"bitbucket.resmi.kz/dc/atomic/Game/LogManager"
-	"bitbucket.resmi.kz/dc/atomic/Game/ResourceManager"
+	"github.com/Entrio/atomic/Game/LogManager"
+	"github.com/Entrio/atomic/Game/ResourceManager"
 	"github.com/gen2brain/raylib-go/raylib"
 	"time"
 )
@@ -34,7 +34,7 @@ func (g *Game) start() {}
 
 /**
 Ok, we are ready to roll with the main update
- */
+*/
 func (g *Game) StartUpdateThread() {
 	// Do some work before update
 
