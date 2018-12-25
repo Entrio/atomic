@@ -1,7 +1,7 @@
 package ResourceManager
 
 import (
-	"bitbucket.resmi.kz/dc/atomic/Game/LogManager"
+	"github.com/Entrio/atomic/Game/LogManager"
 	"github.com/gen2brain/raylib-go/raylib"
 	"os"
 	"unsafe"
