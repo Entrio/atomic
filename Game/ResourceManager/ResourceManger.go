@@ -10,6 +10,7 @@ import (
 type (
 	ResourceManager struct {
 		textures      map[string]rl.Texture2D
+		fonts         map[string]rl.Font
 		configuration map[string]interface{}
 		logManager    *LogManager.LogManager
 	}
@@ -19,6 +20,7 @@ type (
 func NewResourceManager(l *LogManager.LogManager) *ResourceManager {
 	rm := &ResourceManager{
 		textures:      map[string]rl.Texture2D{},
+		fonts:         map[string]rl.Font{},
 		configuration: map[string]interface{}{},
 		logManager:    l,
 	}

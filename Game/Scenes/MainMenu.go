@@ -22,6 +22,8 @@ func (ms MainMenuScene) Awake() {
 		panic(fmt.Sprintf("Please pass resource manager to scene %s", ms.Name))
 	}
 
+	//TODO: Load any resources that are needed
+
 	ms.Logger.LogfTime("Main menu scene loaded")
 }
 

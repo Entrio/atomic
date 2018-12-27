@@ -29,6 +29,7 @@ func Newgame() *Game {
 	}
 
 	g.ResourceManager = ResourceManager.NewResourceManager(g.LogManager)
+	g.ResourceManager.LoadFont("pixfont")
 
 	scenes := make(map[string]Scenes.Scene)
 

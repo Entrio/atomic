@@ -9,7 +9,7 @@ import (
 // Attempt to load the textured from the texture map, if it is not there load it from  file
 func (rm *ResourceManager) LoadTexture(name string) *rl.Texture2D {
 	if t, ok := rm.textures[name]; ok {
-		rm.logManager.Logf("Loaded %s from memory", name)
+		rm.logManager.Logf("Loaded texture %s from memory", name)
 		return &t
 	}
 
