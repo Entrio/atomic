@@ -13,8 +13,8 @@ type (
 		LogManager      *LogManager.LogManager
 		ResourceManager *ResourceManager.ResourceManager
 		startTime       *time.Time
-		scenes          *map[string]Scene
-		activeScene     *Scene
+		scenes          map[string]Scenes.Scene
+		activeScene     *Scenes.Scene
 		shouldExit      bool
 	}
 )
@@ -23,22 +23,28 @@ type (
 func Newgame() *Game {
 	t := time.Now().Local()
 	g := &Game{
-		LogManager: LogManager.NewLogManager(&t),
-		startTime:  &t,
+		LogManager:  LogManager.NewLogManager(&t),
+		startTime:   &t,
+		activeScene: new(Scenes.Scene),
 	}
 
-	scenes := new(map[string]Scene)
+	g.ResourceManager = ResourceManager.NewResourceManager(g.LogManager)
+
+	scenes := make(map[string]Scenes.Scene)
 
 	menuScene := Scenes.MainMenuScene{
-		Name: "main_menu",
+		Name:            "main_menu",
+		ResourceManager: g.ResourceManager,
+		Logger:          g.LogManager,
 	}
 
-	(*scenes)[menuScene.GetName()] = menuScene
+	g.LogManager.LogfTime("Attempting to load main menu scene")
 
-	*g.activeScene = menuScene
+	scenes[menuScene.GetName()] = menuScene
+
+	*g.activeScene = scenes[menuScene.GetName()]
 
 	g.scenes = scenes
-	g.ResourceManager = ResourceManager.NewResourceManager(g.LogManager)
 
 	g.awake()
 
@@ -48,12 +54,16 @@ func Newgame() *Game {
 /**
 Awake is called when all components are initialized and the new game instance is about to be returned
 */
-func (g *Game) awake() {}
+func (g *Game) awake() {
+	(*g.activeScene).Awake()
+}
 
 /**
 Start is called *JUST* before the update loop enters its cycle
 */
-func (g *Game) start() {}
+func (g *Game) start() {
+	(*g.activeScene).Start()
+}
 
 /**
 Ok, we are ready to roll with the main update

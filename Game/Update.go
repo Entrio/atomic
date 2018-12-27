@@ -13,7 +13,7 @@ func (g *Game) update() {
 	for !g.shouldExit {
 		delta = last.Sub(time.Now())
 		//TODO: Update
-		(*g.activeScene).update(delta)
+		(*g.activeScene).Update(delta)
 		last = time.Now()
 	}
 }
