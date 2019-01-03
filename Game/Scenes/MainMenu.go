@@ -28,18 +28,24 @@ func (ms MainMenuScene) Awake() {
 }
 
 func (ms MainMenuScene) Start() {
+
 }
 
 func (ms MainMenuScene) Draw2D() {
 }
 
 func (ms MainMenuScene) DrawUI() {
+
 }
 
 func (ms MainMenuScene) Draw3D() {
 }
 
-func (ms MainMenuScene) Update(time.Duration) {
+func (ms MainMenuScene) Update(dt time.Duration) {
+
+	for i := 0; i < 50000; i++ {
+		// Some code here
+	}
 }
 
 func (ms MainMenuScene) GetName() string {

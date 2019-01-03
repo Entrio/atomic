@@ -1,6 +1,7 @@
 package Game
 
 import (
+	"fmt"
 	"github.com/Entrio/atomic/Game/LogManager"
 	"github.com/Entrio/atomic/Game/ResourceManager"
 	"github.com/Entrio/atomic/Game/Scenes"
@@ -19,6 +20,16 @@ type (
 	}
 )
 
+var (
+	font    *rl.Font
+	fps     = 0
+	afps    = 0
+	lastFPS time.Time
+	ups     = 0
+	aups    = 0
+	lastUPS time.Time
+)
+
 // Create a new instance of the game
 func Newgame() *Game {
 	t := time.Now().Local()
@@ -29,7 +40,7 @@ func Newgame() *Game {
 	}
 
 	g.ResourceManager = ResourceManager.NewResourceManager(g.LogManager)
-	g.ResourceManager.LoadFont("pixfont")
+	g.ResourceManager.LoadFont("romulus")
 
 	scenes := make(map[string]Scenes.Scene)
 
@@ -63,6 +74,9 @@ func (g *Game) awake() {
 Start is called *JUST* before the update loop enters its cycle
 */
 func (g *Game) start() {
+	font = g.ResourceManager.LoadFont("romulus")
+	lastUPS = time.Now()
+	lastFPS = time.Now()
 	(*g.activeScene).Start()
 }
 
@@ -90,6 +104,13 @@ func (g *Game) Draw() {
 	g.Draw2D()
 	g.DrawUI()
 
+	rl.DrawTextEx(*font, fmt.Sprintf("%d fps / %d ups", afps, aups), rl.Vector2{X: 10, Y: 10}, float32(font.BaseSize), 1, rl.White)
+	fps++
+	if time.Now().Sub(lastFPS).Seconds() > 1 {
+		lastFPS = time.Now()
+		afps = fps
+		fps = 0
+	}
 	rl.EndDrawing()
 }
 
