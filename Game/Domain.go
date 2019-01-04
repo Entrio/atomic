@@ -92,6 +92,11 @@ func (g *Game) StartUpdateThread() {
 }
 
 func (g *Game) Draw() {
+
+	if (*g.activeScene).GetCamera3D() != nil {
+		rl.UpdateCamera((*g.activeScene).GetCamera3D())
+	}
+
 	rl.BeginDrawing()
 	rl.ClearBackground(rl.Color{
 		R: 100,
@@ -104,7 +109,11 @@ func (g *Game) Draw() {
 	g.Draw2D()
 	g.DrawUI()
 
-	rl.DrawTextEx(*font, fmt.Sprintf("%d fps / %d ups", afps, aups), rl.Vector2{X: 10, Y: 10}, float32(font.BaseSize), 1, rl.White)
+	msg := fmt.Sprintf("%d fps / %d ups", afps, aups)
+	rl.DrawTextEx(*font, msg, rl.Vector2{
+		X: float32(rl.GetScreenWidth()) - rl.MeasureTextEx(*font, msg, float32(font.BaseSize), 1).X - 5,
+		Y: 5,
+	}, float32(font.BaseSize), 1, rl.White)
 	fps++
 	if time.Now().Sub(lastFPS).Seconds() > 1 {
 		lastFPS = time.Now()

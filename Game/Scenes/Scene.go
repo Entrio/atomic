@@ -1,6 +1,7 @@
 package Scenes
 
 import (
+	"github.com/gen2brain/raylib-go/raylib"
 	"time"
 )
 
@@ -12,4 +13,5 @@ type Scene interface {
 	DrawUI()
 	Draw3D()
 	Update(time.Duration)
+	GetCamera3D() *rl.Camera
 }
