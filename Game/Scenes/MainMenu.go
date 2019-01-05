@@ -12,15 +12,16 @@ type MainMenuScene struct {
 	Name            string
 	ResourceManager *ResourceManager.ResourceManager
 	Logger          *LogManager.LogManager
-	Camera          rl.Camera3D
 }
 
 var (
-	plane rl.Model
+	plane               *rl.Model
+	cam                 *rl.Camera3D
+	winHeight, winWidth int
 )
 
 func (ms MainMenuScene) GetCamera3D() *rl.Camera3D {
-	return &ms.Camera
+	return cam
 }
 
 func (ms MainMenuScene) Awake() {
@@ -32,39 +33,67 @@ func (ms MainMenuScene) Awake() {
 		panic(fmt.Sprintf("Please pass resource manager to scene %s", ms.Name))
 	}
 
-	//TODO: Load any resources that are needed
+	winWidth = rl.GetScreenWidth()
+	winHeight = rl.GetScreenHeight()
 
 	ms.Logger.LogfTime("Main menu scene loaded")
 
-	ms.Camera = rl.Camera3D{
-		Position: rl.Vector3{X: 5.0, Y: 5.0, Z: 5.0},
-		Target:   rl.Vector3{},
-		Up:       rl.Vector3{Y: 1.0},
-		Fovy:     45.0,
+	cam = &rl.Camera3D{
+		Position: rl.NewVector3(0.0, 5.0, 5.0),
+		Target:   rl.NewVector3(-5, 0.0, 0.0),
+		Up:       rl.NewVector3(0.0, 1.0, 0.0),
+		Fovy:     60.0,
+		Type:     rl.CameraPerspective,
 	}
 
-	plane = rl.LoadModelFromMesh(rl.GenMeshPlane(2, 2, 5, 5))
-	plane.Material.Maps[rl.MapDiffuse].Texture = *ms.ResourceManager.LoadTexture("fake")
-	ms.Logger.LogfTime("Mainmenu has awoken!")
+	ms.Logger.LogfTime("Main menu has awoken!")
 }
 
 func (ms MainMenuScene) Start() {
-	rl.SetCameraMode(ms.Camera, rl.CameraOrbital)
+	rl.SetCameraMode(*cam, rl.CameraFree)
+
+	p := rl.Mesh{
+		VertexCount:   0,
+		TriangleCount: 0,
+		Vertices:      nil,
+		Texcoords:     nil,
+		Texcoords2:    nil,
+		Normals:       nil,
+		Tangents:      nil,
+		Colors:        nil,
+		Indices:       nil,
+		VaoID:         0,
+		VboID:         [7]uint32{},
+	}
+	_ = p
+	//v := []float32{
+	//	1, 2, 3,
+	//}
+	//c := []uint8{255, 230, 250}
+	//m := rl.NewMesh(3, 1, &v, nil, nil, nil, nil, &c, nil, 1, [7]uint32{})
+	m := rl.LoadModelFromMesh(rl.GenMeshPlane(5, 5, 2, 2))
+	plane = &m
+	plane.Material.Maps[rl.MapDiffuse].Texture = rl.LoadTextureFromImage(rl.GenImageChecked(2, 2, 1, 1, rl.Red, rl.Green))
 }
 
 func (ms MainMenuScene) Draw2D() {
 }
 
 func (ms MainMenuScene) DrawUI() {
-	rl.DrawRectangle(30, 400, 310, 30, rl.Fade(rl.SkyBlue, 0.5))
-	rl.DrawRectangleLines(30, 400, 310, 30, rl.Fade(rl.DarkBlue, 0.5))
-	rl.DrawText("MOUSE LEFT BUTTON to CYCLE PROCEDURAL MODELS", 40, 410, 10, rl.Blue)
+	rl.DrawRectangle(5, int32(winHeight-35), 310, 30, rl.Fade(rl.SkyBlue, 0.5))
+	rl.DrawRectangleLines(5, int32(winHeight-35), 310, 30, rl.Fade(rl.DarkBlue, 0.5))
+	rl.DrawText(fmt.Sprintf(
+		"Position: X:%f Y:%f Z:%f | %d",
+		cam.Position.X,
+		cam.Position.Y,
+		cam.Position.Z,
+		plane.Mesh.VertexCount,
+	), 10, int32(winHeight-25), 10, rl.Blue)
 }
 
 func (ms MainMenuScene) Draw3D() {
-
-	rl.BeginMode3D(ms.Camera)
-	rl.DrawModel(plane, rl.Vector3{}, 1, rl.White)
+	rl.BeginMode3D(*cam)
+	rl.DrawModel(*plane, rl.Vector3{}, 1, rl.White)
 	rl.DrawGrid(10, 1)
 	rl.EndMode3D()
 }

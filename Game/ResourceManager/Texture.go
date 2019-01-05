@@ -17,6 +17,7 @@ func (rm *ResourceManager) LoadTexture(name string) *rl.Texture2D {
 
 	// Check if file exists
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		rm.logManager.LogfTime("Failed to load texture %s from disk, returning checkered!", filename)
 		i := rm.textures["not_found"]
 		return &i
 	}
